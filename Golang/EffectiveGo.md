@@ -1,3 +1,4 @@
+[Effective Go](https://golang.org/doc/effective_go.html)
 <!-- TOC -->
 
 - [格式化](#格式化)
