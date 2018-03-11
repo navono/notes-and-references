@@ -10,6 +10,8 @@
   - [大小写混合](#大小写混合)
 - [分号](#分号)
 - [流程控制](#流程控制)
+  - [if](#if)
+  - [for](#for)
 - [函数](#函数)
   - [多返回值](#多返回值)
   - [命名的返回值](#命名的返回值)
@@ -115,6 +117,29 @@ if i < f()  // wrong!
 ```
 
 # 流程控制
+`Go`中没有`do`或者`while`循环，只有一个通用的`for`，和更灵活的`switch`。`if`和`switch`接受一个像`for`一样的可选的初始化语句。`Go`中增加了一个类型`select`。
+
+## if
+`if`除了常用的用法外，还可以在接受初始化语句。比如
+```go
+if err := file.Chmod(0664); err != nil {
+    log.Print(err)
+    return err
+}
+```
+
+## for
+`Go`的`for`集合了类似C语言中的`for`和`while`功能。由三种形式：
+```go
+// Like a C for
+for init; condition; post { }
+
+// Like a C while
+for condition { }
+
+// Like a C for(;;)
+for { }
+```
 
 
 # 函数
