@@ -1,0 +1,1 @@
+[url](https://medium.com/javascript-scene/curry-or-partial-application-8150044c78b8)
