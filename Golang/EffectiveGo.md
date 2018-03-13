@@ -12,6 +12,8 @@
 - [流程控制](#流程控制)
   - [if](#if)
   - [for](#for)
+  - [switch](#switch)
+  - [Type switch](#type-switch)
 - [函数](#函数)
   - [多返回值](#多返回值)
   - [命名的返回值](#命名的返回值)
@@ -129,7 +131,7 @@ if err := file.Chmod(0664); err != nil {
 ```
 
 ## for
-`Go`的`for`集合了类似C语言中的`for`和`while`功能。由三种形式：
+`Go`的`for`集合了类似C语言中的`for`和`while`功能。有三种形式：
 ```go
 // Like a C for
 for init; condition; post { }
@@ -140,13 +142,103 @@ for condition { }
 // Like a C for(;;)
 for { }
 ```
+`for`也可以作为数组的遍历。
+```go
+for pos, char := range "日本\x80語" { // \x80 is an illegal UTF-8 encoding
+    fmt.Printf("character %#U starts at byte position %d\n", char, pos)
+}
+```
 
+## switch
+`Go`的`switch`比`C`的更灵活。它的表达式不需要是`常量`或者`整型`。
+
+## Type switch
+判断接口变量的动态类型，得到一个变量的类型使用关键字`type`。
+```go
+var t interface{}
+t = functionOfSomeType()
+switch t := t.(type) {
+default:
+    fmt.Printf("unexpected type %T\n", t)     // %T prints whatever type t has
+case bool:
+    fmt.Printf("boolean %t\n", t)             // t has type bool
+case int:
+    fmt.Printf("integer %d\n", t)             // t has type int
+case *bool:
+    fmt.Printf("pointer to boolean %t\n", *t) // t has type *bool
+case *int:
+    fmt.Printf("pointer to integer %d\n", *t) // t has type *int
+}
+```
 
 # 函数
 ## 多返回值
-## 命名的返回值
-## Defer
+`Go`的其中一个特性就是`函数`和`方法`可以返回多个值。这也就导致`Go`的`API`风格和其他语言有所区别。比如`File`的`Write`方法：
+```go
+func (file *File) Write(b []byte) (n int, err error)
+```
+上述方法返回已写入字节的数量以及出错时的错误变量。
 
+## 命名的返回值
+方法的参数没有强制规定要命名，但是也可以通过命名参数增强代码的可读性，同时命名的返回值的初始化和结果时绑定在这个变量名称上的。
+```go
+func ReadFull(r Reader, buf []byte) (n int, err error) {
+    for len(buf) > 0 && err == nil {
+        var nr int
+        nr, err = r.Read(buf)
+        n += nr
+        buf = buf[nr:]
+    }
+    return
+}
+```
+
+## Defer
+对于被标记了`defer`的函数调用，都会被延迟执行，直到函数退出的时候。同时多个`defer`函数以`后进先出`的队列方式执行。
+```go
+for i := 0; i < 5; i++ {
+    defer fmt.Printf("%d ", i)
+}
+```
+以上会输出`4 3 2 1 0`。
+
+这种方式的好处就是对于资源的管理。对资源的销毁动作调用加上`defer`，总能在函数退出的时候进行释放，而不用关心资源能否得到妥善的处理。
+
+看一个有趣的例子：
+```go
+func trace(s string) string {
+    fmt.Println("entering:", s)
+    return s
+}
+
+func un(s string) {
+    fmt.Println("leaving:", s)
+}
+
+func a() {
+    defer un(trace("a"))
+    fmt.Println("in a")
+}
+
+func b() {
+    defer un(trace("b"))
+    fmt.Println("in b")
+    a()
+}
+
+func main() {
+    b()
+}
+```
+输出：
+```go
+entering: b
+in b
+entering: a
+in a
+leaving: a
+leaving: b
+```
 
 # 数据
 ## new
