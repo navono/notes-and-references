@@ -1,4 +1,5 @@
 // 同源策略判断 , script中加入 `crossorigin`
+// 下面代码有待重构
 
 window.onerror = function(msg,url,line,col,error){
     //没有URL不上报！上报也不知道错误
