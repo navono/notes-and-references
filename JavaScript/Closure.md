@@ -1,3 +1,4 @@
+[What is a Cloure](https://medium.com/javascript-scene/master-the-javascript-interview-what-is-a-closure-b2f0d2152b36)
 <!-- TOC -->
 
 - [闭包](#闭包)
@@ -17,7 +18,7 @@
 # 闭包
 Q：解释下JavaScript中的闭包（Closure）
 
-A：JavaScript中的任意一个函数都是一个闭包。闭包和`函数作用域（Function Scopes）`有点类似。当定义一个函数的时候，我们就创建了一个闭包，而不是在执行的时候。
+A：JavaScript中的任意一个函数都是一个闭包。闭包和`函数作用域（Function Scopes）`有点类似。从定义上来说，`闭包`就是一个函数和其引用的状态（词法环境）的组合，换句话说，`闭包`使得一个内部函数访问外部函数作用域的能力。`闭包`是在函数创建的时候被创建，而不是在执行的时候。
    
 ## 函数是通过引用赋值的
 ```js
