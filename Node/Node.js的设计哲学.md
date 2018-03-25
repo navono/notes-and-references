@@ -4,6 +4,12 @@
 - [小模块（Small modules）](#小模块small-modules)
 - [暴露最小的API集（Small surface area）](#暴露最小的api集small-surface-area)
 - [简单实用（Simplicity and pragmatism）](#简单实用simplicity-and-pragmatism)
+- [Reactor模型](#reactor模型)
+  - [I/O](#io)
+    - [阻塞 I/O](#阻塞-io)
+    - [非阻塞 I/O](#非阻塞-io)
+  - [事件多路复用（Event demultiplexing）](#事件多路复用event-demultiplexing)
+  - [reactor模型](#reactor模型)
 
 <!-- /TOC -->
 
@@ -43,4 +49,16 @@
 其实这个原则是基于`软件架构`是会随着业务需求改变而`进化`的一个理念，而不是一开始就设计一个架构复杂，实现也耗时的软件。因为我们没办法在最一开始就遇见以后的变化。因此将软件设计成`可进化`更重要。
 
 
+# Reactor模型
+## I/O
+相对于`CPU`来说，`I/O`操作总是很慢的。这里说的`I/O`的执行速度相对于`CPU`的执行速度。但是从`I/O`执行方式来说，总的来说可以分为两种：
+### 阻塞 I/O
+阻塞I/O指的是从发起一次I/O操作请求，要等到此操作完成，等待的时间取决与具体的I/O操作，在等待期间，执行的线程是阻塞的，无法去执行其他任务。对于此I/O模型的系统，基本会使用多线程或多进程来处理并发。
+![block IO](./static/block-IO.PNG)
 
+### 非阻塞 I/O
+相对于阻塞I/O，很多操作系统支持非阻塞I/O。
+
+## 事件多路复用（Event demultiplexing）
+
+## reactor模型
