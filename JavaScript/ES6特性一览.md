@@ -1,0 +1,15 @@
+- let and const
+- arrow function
+- class
+- object literals
+- Map and Set
+- WeakMap and WeakSet
+- Template literals
+- Default fuction parameters
+- Rest parameters
+- Spread operator
+- Destructuring
+- new.target
+- Proxy
+- Reflect
+- Symbols
