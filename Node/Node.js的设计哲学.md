@@ -9,7 +9,7 @@
     - [阻塞 I/O](#阻塞-io)
     - [非阻塞 I/O](#非阻塞-io)
   - [事件多路复用（Event demultiplexing）](#事件多路复用event-demultiplexing)
-  - [reactor模型](#reactor模型)
+  - [Reactor模型](#reactor模型-1)
 
 <!-- /TOC -->
 
@@ -59,6 +59,42 @@
 ### 非阻塞 I/O
 相对于阻塞I/O，很多操作系统支持非阻塞I/O。
 
-## 事件多路复用（Event demultiplexing）
+其他的参考[IO模型](https://github.com/navono/tech-notes/blob/master/%E6%9E%B6%E6%9E%84/IO%E6%A8%A1%E5%9E%8B.md)。
 
-## reactor模型
+## 事件多路复用（Event demultiplexing）
+其实这就是个`事件通知接口（event notification interface）`，它将`I/O操作请求`放入到一个队列，然后阻塞，直到有资源可用时会被唤醒进行处理。有点类型`Win32`编程中的`WaitForMultipleObjects`。
+
+下面是伪码：
+```
+socketA, pipeB;
+watchedList.add(socketA, FOR_READ); //[1]
+watchedList.add(pipeB, FOR_READ);
+while(events = demultiplexer.watch(watchedList)) { //[2]
+  //event loop
+  foreach(event in events) { //[3]
+    //This read will never block and will always return data
+    data = event.resource.read();
+    if(data === RESOURCE_CLOSED)
+      //the resource was closed, remove it from the watched list
+      demultiplexer.unwatch(event.resource);
+    else
+      //some actual data was received, process it
+      consumeData(data);
+  }
+}
+```
+
+1. 要执行的操作被放入一个队列，同时附加上操作的类型（`read`）
+2. 然后`event notifier`监听队列中的操作，有事件发生时，返回此事件
+3. 处理返回的事件列表，循环到第一步
+
+以上就称之为`事件循环（event loop）`。
+
+单线程同步事件多路复用：
+![demultiplexer](./static/demultiplexer.PNG)
+
+## Reactor模型
+`Reactor模式`时上述的一个特例。在`Node.js`中，每一个异步`IO操作`都会附加上一个`handler（也就是回调）`，当`IO操作`被执行时，回调就会被调用。
+
+![Reactor](./static/Node-Reactor.PNG)
+
