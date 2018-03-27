@@ -2,7 +2,7 @@
 
 - [小内核（Small core）](#小内核small-core)
 - [小模块（Small modules）](#小模块small-modules)
-- [暴露最小的API集（Small surface area）](#暴露最小的api集small-surface-area)
+- [最小暴露原则（Small surface area）](#最小暴露原则small-surface-area)
 - [简单实用（Simplicity and pragmatism）](#简单实用simplicity-and-pragmatism)
 - [Reactor模型](#reactor模型)
   - [I/O](#io)
@@ -10,6 +10,7 @@
     - [非阻塞 I/O](#非阻塞-io)
   - [事件多路复用（Event demultiplexing）](#事件多路复用event-demultiplexing)
   - [Reactor模型](#reactor模型-1)
+- [Node.js的构成](#nodejs的构成)
 
 <!-- /TOC -->
 
@@ -98,3 +99,21 @@ while(events = demultiplexer.watch(watchedList)) { //[2]
 
 ![Reactor](./static/Node-Reactor.PNG)
 
+1. 首先应用程序通过提交一个请求给`Event Demultiplexer`来产生一个新的`I/O`操作。同时应用程序还要指定一个`handler`，这个`回调handler`将会在`I/O`操作完成后被调用。向`Event Demultiplexer`提交请求是非阻塞的，因此控制权会立即返回给应用程序
+2. 当一组`I/O`操作完成后，`Event Demultiplexer`会推送一个新的事件到`Event Queue`
+3. 此时，`Event Loop`会遍历`Event Queue`的每一项
+4. 对于每一个事件，与其相对的`handler`会被调用
+5. 这个`handler`是应用程序的一部分，因为它是在`Event Loop`中被调用，所以最终它执行完会把控制权交还给`Event Loop`，但是在执行期间，可以再度产生新的操作
+6. 当`Event Queue`中所有的事件都被处理完后，整个过程又会在`Event Demultiplexer`处被阻塞，直到下一个事件的到来
+
+
+> 在`Node.js`中，如果`Event Demultiplexer`没有`pending`状态的操作的话，进程会自动退出。
+
+
+# Node.js的构成
+在`Node.js`中，使用`libuv`实现了上述的`reactor模式`，除此之外，还包括了其他几个重要的组成部分：
+- 一组包装和暴露`libuv`功能和底层功能的中间件（`bindings`）
+- V8，JavaScript执行引擎
+- JavaScript核心库，实现了高层次的`Node.js` API
+
+![node.js-architecture](./static/node.js-architecture.png)
