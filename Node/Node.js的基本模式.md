@@ -45,6 +45,30 @@ after
 ```
 
 ### 异步CPS
+如果将上述例子改成异步CPS，只需要在调用`callback`改成异步即可。
+```js
+function addAsync(a, b, callback) {
+  setTimeout(() => callback(a + b), 100);
+}
+```
+
+测试代码：
+```js
+console.log('before');
+addAsync(1, 2, result => console.log('Result: ' + result));
+console.log('after');
+```
+输出：
+```
+before
+after
+Result: 3
+```
+
+`setTimeout`会触发一个异步操作，它不会等待回调执行完毕而是直接将控制权交还给调用方。这个和`Event Loop`在用户执行完回调后，会重新获取控制权一样，这样接下来的事件才能够被处理。
+
+下图是上面`addAsync`的整个流程：
+![async-CPS](./static/async-CPS.PNG)
 
 ### 非CPS风格的回调
 
