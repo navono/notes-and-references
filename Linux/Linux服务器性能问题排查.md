@@ -1,0 +1,1 @@
+[用十条命令在一分钟内检查Linux服务器性能](http://www.infoq.com/cn/news/2015/12/linux-performance)
