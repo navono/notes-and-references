@@ -68,15 +68,17 @@ require.resolve = (moduleName) => {
 上面的例子 __只是__ 为了演示`Node.js`中的模块系统内部是如何工作的。解释一下步骤：
 1. 
 
-
-## 定义一个模块
-
-
-## 定义全局变量
-
+所有模块内的遍历都是私有的。除了使用`modlue.exports`导出的。有一个特殊的变量，称之为`global`，赋值给此`global`的变量都会自动加入到全局作用域中。
 
 ## module.export vs. exports
+`exports`是`module.exports`初始化值的引用，这在模块加载前只是一个简单的对象字面量。因此我们只能在`exports`引用的对象上增加属性：
+```js
+exports.hello = () => {
+  console.log("hello");
+}
+```
 
+所以对`exports`的值重新赋值并不会影响`mnodule.exports`的值。而`module.exports`可以导出`函数`、`实例`或者`变量`。
 
 ## require是同步的
 
