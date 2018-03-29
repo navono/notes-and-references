@@ -10,7 +10,6 @@
     - [[Unleashing Zalgo](http://blog.izs.me/post/59142742143/designing-apis-for-asynchrony)](#unleashing-zalgohttpblogizsmepost59142742143designing-apis-for-asynchrony)
     - [延时执行](#延时执行)
   - [Node.js的回调惯例](#nodejs的回调惯例)
-- [模块系统及其模式](#模块系统及其模式)
 - [观察者模式（Event Emitter）](#观察者模式event-emitter)
 
 <!-- /TOC -->
@@ -155,6 +154,5 @@ function readJSON(filename, callback) {
 
   > 对于在`Event Loop`中发生的异常，`Node.js`提供了一个特殊的事件用来全局捕获，`uncaughtException`，如果发生了异常，这个事件会在进程退出前被触发。
 
-# 模块系统及其模式
 
 # 观察者模式（Event Emitter）
