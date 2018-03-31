@@ -47,3 +47,11 @@
 
 ## 注意事项
 `minikube`依赖了`ssh`，在`Win10`环境下，可能会启动不成功，此时可是尝试在`git bash`环境下运行上述命令。
+
+一直提示`SSH`错误，尝试以下方法：
+1. Create an Virtual Switch in Hyper-V with the Connect Type set to "Internal network"; I named mine Minikube.
+2. In Network Connections select your actual internet connect (Ethernet for me); right click > Properties.
+3. On the Sharing tab tick "Allow other network users to connect through ..." and then select the virtual switch you created in step 1 ("vEthernet (Minikube)" in my case).
+4. Delete any existing Minikube VMs in Hyper-v and delete the .minikube folder in your home folder.
+5. Run (as an administrator) "minikube start --vm-driver=hyperv --hyperv-virtual-switch=Minikube"
+This provides an internet connection and DHCP for the minikube VM.
