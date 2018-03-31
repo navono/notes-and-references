@@ -80,10 +80,49 @@ exports.hello = () => {
 
 所以对`exports`的值重新赋值并不会影响`mnodule.exports`的值。而`module.exports`可以导出`函数`、`实例`或者`变量`。
 
-## require是同步的
+`require`是同步的，但是曾经出现过`异步require`，后来删除了。
 
 
 ## 模块解析算法
+`npm`根据模块的加载目录，从此目录加载不同的模块版本。因为每个模块依赖都会有自己的`node_modules`目录，下面存放的仅仅只是本模块的依赖包。
+
+这个算法主要是针对`resolve`函数，它接收一个字符串，返回一个这个模块的全路径。模块名称解析算法主要分三个分支：
+- 文件模块（File modules）。以`/`开始代表的是绝对路径；以`./`开始代表的是相对路径
+- Node.js核心模块（Core modules）。没有以`/`或`./`开头的，算法首先试图从核心的Node.js模块查找
+- 包模块（Package modules）。如果在核心模块中没有查找到，那么会继续从本目录下的`node_modules`目录下查找，如果没有查到到会逐层直到根目录。
+
+
+对于`文件模块`和`包模块`，单个文件和目录都可能匹配到`moduleName`，它会尝试用以下规则取匹配：
+- <moduleName>.js
+- <moduleName>/index.js
+- 在`package.json`的`main`属性中指定的文件/文件名
+
+
+举个例子说明`Node.js`如何解决`dependency hell`问题。假设我们有以下结构的目录：
+
+myApp
+|---- foo.js
+|---- node_modules
+      |
+      |---- depA
+      |     |____ index.js
+      |---- depB
+      |     |---- bar.js
+      |     |____ node_modules
+      |           |---- depA
+      |                 |____ index.js
+      |---- depC
+      |     |---- foobar.js
+      |     |____ node_modules
+      |           |____ depA
+      |                 |____ index.js
+      |
+
+
+`myApp`、`depB`、`depC`都依赖于`depA`，但是它们每一个都有自已私有版本的依赖包。同时在不同文件使用`require(depA)`时，路径解析算法都会正确解析到相应的模块路径。比如：
+- 从`/myApp/foo.js`调用`require("depA")`将会加载`/myApp/node_modules/depA/index.js`
+- 从`/myApp/node_moudles/depB/bar.js`调用`require("depA")`将会加载`/myApp/node_modules/depB/node_modules/depA/index.js`
+- 从`/myApp/node_moudles/depC/foobar.js`调用`require("depA")`将会加载`/myApp/node_modules/depC/node_modules/depA/index.js`
 
 
 ## 模块缓存
