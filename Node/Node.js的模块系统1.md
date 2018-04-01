@@ -1,3 +1,16 @@
+<!-- TOC -->
+
+- [模块系统及其模式](#模块系统及其模式)
+  - [手工模块加载器](#手工模块加载器)
+  - [module.export vs. exports](#moduleexport-vs-exports)
+  - [模块解析算法](#模块解析算法)
+  - [模块缓存](#模块缓存)
+  - [循环依赖](#循环依赖)
+- [模块定义模式](#模块定义模式)
+  - [修改其他模块或者全局作用域](#修改其他模块或者全局作用域)
+
+<!-- /TOC -->
+
 # 模块系统及其模式
 模块是复杂系统的基础构成部分，它不仅使得应用更加高内聚低耦合，同时也隐藏了细节。
 
@@ -82,7 +95,6 @@ exports.hello = () => {
 
 `require`是同步的，但是曾经出现过`异步require`，后来删除了。
 
-
 ## 模块解析算法
 `npm`根据模块的加载目录，从此目录加载不同的模块版本。因为每个模块依赖都会有自己的`node_modules`目录，下面存放的仅仅只是本模块的依赖包。
 
@@ -124,13 +136,45 @@ myApp
 - 从`/myApp/node_moudles/depB/bar.js`调用`require("depA")`将会加载`/myApp/node_modules/depB/node_modules/depA/index.js`
 - 从`/myApp/node_moudles/depC/foobar.js`调用`require("depA")`将会加载`/myApp/node_modules/depC/node_modules/depA/index.js`
 
-
 ## 模块缓存
-
+所有的模块都只会在第一次被加载，之后的`require`只会从缓存中读取。可以通过`require.cache`直接访问缓存。
 
 ## 循环依赖
-# 模块定义模式
+- Module a.js
+  ```js
+  exports.loaded = false;
+  const b = require('./b');
+  module.exports = {
+    bWasLoaded: b.loaded,
+    loaded: true
+  };
+  ```
+- Module b.js
+  ```js
+  exports.loaded = false;
+  const a = require('./a');
+  module.exports = {
+    aWasLoaded: a.loaded,
+    loaded: true
+  };
+  ```
 
+test:
+```js
+const a = require('./a');
+const b = require('./b');
+console.log(a);
+console.log(b);
+```
+输出：
+```
+{ bWasLoaded: true, loaded: true }
+{ aWasLoaded: false, loaded: true }
+```
+
+两个模块都被加载了。但是从`b.js`中加载的`a.js`是不完整的。
+
+# 模块定义模式
 - 命名导出
 - 导出函数
 - 导出构造函数
