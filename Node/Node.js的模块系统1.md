@@ -178,7 +178,26 @@ console.log(b);
 - 命名导出
 - 导出函数
 - 导出构造函数
+  使用`factory`模式
+  ```
+  function Logger(name) {
+    if (!(this instanceof Logger)) {
+      return new Logger(name);
+    }
+    this.name = name;
+  }
+  ```
+  or
+  ```
+  function Logger(name) {
+    if (!new.target) {
+      return new LoggerConstructor(name);
+    }
+    this.name = name;
+  }
+  ```
 - 导出实例
 
 
 ## 修改其他模块或者全局作用域
+俗称为`monkey patching`。详细参考`sample`中的`patcherTest.js`。
