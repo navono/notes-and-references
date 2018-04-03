@@ -11,6 +11,11 @@
     - [延时执行](#延时执行)
   - [Node.js的回调惯例](#nodejs的回调惯例)
 - [观察者模式（Event Emitter）](#观察者模式event-emitter)
+  - [EventEmitter类](#eventemitter类)
+  - [错误处理](#错误处理)
+  - [同步与异步事件](#同步与异步事件)
+  - [EventEmitter与callback](#eventemitter与callback)
+  - [回调与EventEmitter的组合](#回调与eventemitter的组合)
 
 <!-- /TOC -->
 
@@ -156,3 +161,76 @@ function readJSON(filename, callback) {
 
 
 # 观察者模式（Event Emitter）
+`观察者模式`是`node.js`的基石。这也是使用`callback`的绝佳模式。和普通的`callback`模式的主要区别是，`观察者模式`可以在事件触发时，通知多个`订阅者`，而普通的`callback`只能是一个。`node.js`中的`观察者模式`主要是通过`EventEmitter`类来实现。
+
+## EventEmitter类
+主要有那么几个重要的函数：
+- on(event, listener)
+- once(event, listener)
+- emit(event, [arg1], [...])
+- removeListener(event, listener)
+
+例如：
+```js
+const EventEmitter = require('events').EventEmitter;
+const fs = require('fs');
+function findPattern(files, regex) {
+  const emitter = new EventEmitter();
+  files.forEach(function(file) {
+    fs.readFile(file, 'utf8', (err, content) => {
+      if(err)
+        return emitter.emit('error', err);
+      emitter.emit('fileread', file);
+      let match;
+      if(match = content.match(regex))
+        match.forEach(elem => emitter.emit('found', file, elem));
+    });
+  });
+  return emitter;
+}
+```
+调用：
+```js
+findPattern(
+  ['fileA.txt', 'fileB.json'],
+  /hello \w+/g
+)
+.on('fileread', file => console.log(file + ' was read'))
+.on('found', (file, match) => console.log('Matched "' + match +
+'" in file ' + file))
+.on('error', err => console.log('Error emitted: ' + err.message));
+```
+
+除了直接在对象内部使用`EventEmitter`，也可以选择从`EventEmitter`继承。
+
+## 错误处理
+基本可以通过触发一个称之为`error`的事件，将具体的错误信息通过构造`Error`实例传递出去。
+
+## 同步与异步事件
+触发事件的是否同步还是异步，取决于注册的处理函数的方式。像上面的`findPattern`例子中，在异步回调中触发事件。因为异步回调总是在后一个事件循环中处理，所有有足够的时间，注册回调。
+
+另一方面，事件触发也可以是同步的。但是这要求在`EventEmitter`开始触发事件前，所有的回调都已经注册好。
+比如`syncEmit.js`例子。
+
+## EventEmitter与callback
+```js
+function helloEvents() {
+  const eventEmitter = new EventEmitter();
+  setTimeout(() => eventEmitter.emit('hello', 'hello world'), 100);
+}
+
+function helloCallback(callback) {
+  setTimeout(() => callback('hello world'), 100);
+}
+```
+
+- 事件可以订阅多次，回调只能一次
+- 事件可以触发不同的事件，而不用事先注册回调；但是使用回调，想要处理不同类型的事件，需要注册不同的回调处理函数
+
+## 回调与EventEmitter的组合
+`glob`包使用的就是回调与异步的组合：
+```js
+const glob = require('glob');
+glob('data/*.txt', (error, files) => console.log(`All file found: ${JSON.stringify(files)}`))
+  .on('match', match => console.log(`Match found: ${match}`));
+```
