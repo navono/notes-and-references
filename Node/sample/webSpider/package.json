@@ -1,0 +1,11 @@
+{
+  "name": "webSpider",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "devDependencies": {
+    "mkdirp": "^0.5.1",
+    "request": "^2.85.0",
+    "slug": "^0.9.1"
+  }
+}
