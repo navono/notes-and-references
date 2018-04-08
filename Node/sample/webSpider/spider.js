@@ -2,7 +2,7 @@ const request = require("request");
 const fs = require("fs");
 const mkdirp = require("mkdirp");
 const path = require("path");
-const utilities = require("./utilities");
+const utilities = require("../utilities");
 
 function spider(url, callback) {
   const filename = utilities.urlToFilename(url);
