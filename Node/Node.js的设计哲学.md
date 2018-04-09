@@ -66,7 +66,7 @@
 其实这就是个`事件通知接口（event notification interface）`，它将`I/O操作请求`放入到一个队列，然后阻塞，直到有资源可用时会被唤醒进行处理。有点类型`Win32`编程中的`WaitForMultipleObjects`。
 
 下面是伪码：
-```
+```js
 socketA, pipeB;
 watchedList.add(socketA, FOR_READ); //[1]
 watchedList.add(pipeB, FOR_READ);
