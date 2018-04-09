@@ -69,7 +69,7 @@ function spider(url, nesting, callback) {
     }
 
     spiderLinks(url, body, nesting, callback);
-  })
+  });
 }
 
 spider(process.argv[2], 1, err => {
