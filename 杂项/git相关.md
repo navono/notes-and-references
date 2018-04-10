@@ -1,3 +1,4 @@
+# git仓库迁移
 1. 从原地址克隆一份裸版本库，比如原本托管于 GitHub。
 > git clone --bare git://github.com/username/project.git
 
