@@ -5,6 +5,9 @@
   - [Promise化](#promise化)
   - [设计API是基于`callbakc`还是`Promise`](#设计api是基于callbakc还是promise)
 - [Generators](#generators)
+  - [iterator](#iterator)
+  - [将值传回给 generator](#将值传回给-generator)
+  - [generator的异步控制流](#generator的异步控制流)
 - [async\await](#async\await)
 
 <!-- /TOC -->
@@ -107,5 +110,64 @@ function asyncDivision(dividend, divisor, cb) {
 
 
 # Generators
+也称之为`semi-coroutines`。
+- 多个入口点
+- 可以被挂起（suspend，使用`yield`）
+- 可以被恢复
+
+语法：
+```js
+function * makeGenerator() {
+  // bofy
+}
+```
+
+在函数体内，可以使用`yeild`暂停当前执行流，将结果返回给调用方。比如：
+```js
+function * makeGenerator() {
+  yield 'Hello';
+  console.log('Re-entered');
+}
+```
+
+`makeGenerator`返回的是一个`generator`对象，其有一个很重要的方法，也就是恢复`generator`的方法：`next()`。
+
+## iterator
+```js
+function * iteratorGenerator(arr) {
+  for (let i = 0; i < arr.length; i++) {
+    yield arr[i];    
+  }
+}
+```
+
+## 将值传回给 generator
+在`next()`中带上参数就是将值传回给`generator`，然后在`generator`中保存`yield`的返回值。
+```js
+function * twoWayGenerator() {
+  const what = yield null;
+  console.log('Hello ' + what);
+}
+
+const twoWay = twoWayGenerator();
+twoWay.next();
+twoWay.next('world');
+```
+
+## generator的异步控制流
+```js
+function asyncFlow(generatorFunction) {
+  function callback(err) {
+    if(err) {
+      return generator.throw(err);
+    }
+    const results = [].slice.call(arguments, 1);
+    generator.next(results.length> 1  results : results[0]);
+  }
+
+  const generator = generatorFunction(callback);
+  generator.next();
+}
+```
 
 # async\await
