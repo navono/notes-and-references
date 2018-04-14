@@ -171,3 +171,5 @@ function asyncFlow(generatorFunction) {
 ```
 
 # async\await
+- 使用`await`的函数都必须声明为`async`
+- 被标注了`await`的函数，返回的必须是`Promise`对象
