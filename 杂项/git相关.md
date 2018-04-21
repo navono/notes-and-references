@@ -38,8 +38,8 @@
 ## 安装 Git
 安装完成后，设置全局的`Git`账户
 > git config --global --list
-> git config --global user.name name
-> git config --global user.email email
+> <br>git config --global user.name name
+> <br>git config --global user.email email
 
 ## 生成SSH key
 使用的`email`地址要与`Git`全局配置的`email`地址（也就是`github`账户的地址）一致。
@@ -74,7 +74,7 @@ PreferredAuthentications publickey
 IdentityFile C:\\Users\\zen\\.ssh\\id_rsa
 User navono
 ```
-__注意上述`HostName`的`ssh`。__
+__注意上述`HostName`的`ssh`和`IdentityFile`的路径。__
 
 `config`文件也可以配置多个地址，比如类似下面这种：
 ```json
