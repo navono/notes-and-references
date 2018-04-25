@@ -73,4 +73,8 @@ listen:
 ```
 
 # Windows 服务
+- Path: node
+- Startup directory: c:\verdaccio
+- Arguments: c:\verdaccio\node_modules\verdaccio\src\lib\cli.js -c c:\verdaccio\config.yaml
+
 参照`Windows服务化.md`
