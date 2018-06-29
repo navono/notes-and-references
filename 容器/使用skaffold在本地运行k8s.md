@@ -46,7 +46,7 @@
 > minikube start --vm-driver="hyperv" --hyperv-virtual-switch="k8s" --v=3
 
 ## 注意事项
-`minikube`依赖了`ssh`，在`Win10`环境下，可能会启动不成功，此时可是尝试在`git bash`环境下运行上述命令。
+`minikube`依赖了`ssh`，在`Win10`环境下，可能会启动不成功，此时可是尝试在`git bash`环境下（管理者权限）运行上述命令。
 
 一直提示`SSH`错误，尝试以下方法：
 1. Create an Virtual Switch in Hyper-V with the Connect Type set to "Internal network"; I named mine Minikube.
