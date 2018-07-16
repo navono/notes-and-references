@@ -46,3 +46,7 @@ Go除了提供了goroutine之外，也提供了内存访问同步原语机制。
 # Go 的并发模式
 # Go 的扩展能力
 # goroutine 和 runtime
+## goroutine 和 OS thread、Green thread的关系
+Green Thread是指由语言的运行时管理，一种更高层级的coroutine的抽象。coroutine是简单的并发subroutine，`不可抢占`，`多入口`。
+
+goroutine不是OS thread，也不是Green thread，而是Go独有的一种coroutine, goroutine是和`Go运行时`紧密绑定的coroutine，由Go的运行时进行调度，进行状态管理。Go的运行时在内部实现了一个`M:N`的调度器，也就是`M个Green Thread`对应`N个OS Thread`，然后将`goroutine`调度到`Green Thread`上。
