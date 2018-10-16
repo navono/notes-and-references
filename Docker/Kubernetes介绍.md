@@ -7,7 +7,7 @@
 - 在相同`pod`里的容器被认为是在相同的机器上以及共享资源
 
 如果几个容器间是紧耦合以及共享`I/O`资源的话，那么这些容器可以部署同一个`pod`中。
-![pod-diagram](./static/pod-diagram.png)
+![pod-diagram](./resources/pod-diagram.png)
 
 
 ## Deployment
@@ -26,10 +26,10 @@
 - 上线新的特性到`pod`中（可以是新的镜像）
 - 回滚到老的`pod`
 
-![deployment-1](./static/deployment-1.png)
+![deployment-1](./resources/deployment-1.png)
 
 ## Services
 `Deployment`之后，我们需要将我们的服务暴露给外界或者内部，以提供我们的功能，这时就需要`Service`。`Service`会为服务暴露`固定的IP`和`端口`，访问这些`IP`会被路由到相应的`Pod`中。
 
 每个`Pod`都会分配一个`IP`。当集群中的一个`Pod`下线后，请求会被路由到集群中的另一些`Pod`。默认情况下，`Kubernetes`的`DNS服务`是暴露`服务名`给所有的`Pod`。
-![service](./static/service.jpg)
+![service](./resources/service.jpg)
