@@ -9,3 +9,4 @@
 
 # 其他
 - [Docker lab](https://github.com/docker/labs)
+- [如何Docker化任意一个应用](http://www.infoq.com/cn/articles/how-to-dockerize-any-application?utm_campaign=rightbar_v2&utm_source=infoq&utm_medium=articles_link&utm_content=link_text#mainLogin)
